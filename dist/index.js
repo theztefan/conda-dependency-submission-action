@@ -43854,6 +43854,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const yaml = __importStar(__nccwpck_require__(4083));
 const glob = __importStar(__nccwpck_require__(1957));
 const fs = __importStar(__nccwpck_require__(7147));
+const path = __importStar(__nccwpck_require__(1017));
 const dependency_submission_toolkit_1 = __nccwpck_require__(9810);
 class CondaParser {
     static searchFiles(filePath = "", filePattern = "") {
@@ -43874,7 +43875,8 @@ class CondaParser {
     static getManifestFromYaml(yaml, filePath, options) {
         var _a;
         core.debug(`getManifestFromEnvironmentFile processing ${yaml}`);
-        let manifest = new dependency_submission_toolkit_1.Manifest(yaml.name, filePath);
+        const manifestName = yaml.name || path.basename(filePath);
+        let manifest = new dependency_submission_toolkit_1.Manifest(manifestName, filePath);
         (_a = yaml.dependencies) === null || _a === void 0 ? void 0 : _a.forEach((dependency) => {
             const treatAsPython = (options === null || options === void 0 ? void 0 : options.treatAsPython) === true;
             // If it's an object with the collection `pip`, then these are PyPI dependencies
@@ -44033,7 +44035,7 @@ function run() {
         let manifests = condaParser_1.default.getManifestsFromEnvironmentFiles(condaParser_1.default.searchFiles(core.getInput('filePath'), core.getInput('filePattern')), { treatAsPython });
         let snapshot = new dependency_submission_toolkit_1.Snapshot({
             name: "conda-dependency-submission-action",
-            version: "0.0.1",
+            version: "0.0.2",
             url: "https://github.com/jhutchings1/conda-dependency-submission-action",
         }, github.context, {
             correlator: `${github.context.job}`,

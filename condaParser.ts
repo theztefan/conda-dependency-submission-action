@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import * as yaml from 'yaml';
 import * as glob from 'glob';
 import * as fs from 'fs';
+import * as path from 'path';
 
 import {
   PackageCache,
@@ -34,7 +35,8 @@ export default class CondaParser {
   static getManifestFromYaml(yaml: any, filePath: string, options?: { treatAsPython?: boolean }) {
     core.debug(`getManifestFromEnvironmentFile processing ${yaml}`);
 
-    let manifest = new Manifest(yaml.name, filePath);
+  const manifestName = yaml.name || path.basename(filePath);
+  let manifest = new Manifest(manifestName, filePath);
     yaml.dependencies?.forEach((dependency: any) => {
       const treatAsPython = options?.treatAsPython === true;
       // If it's an object with the collection `pip`, then these are PyPI dependencies
