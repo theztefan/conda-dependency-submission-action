@@ -1,7 +1,7 @@
-import conda from './condaParser';
+import conda from '../src/condaParser';
 
 test('Gets files', async () => {
-  const files = conda.searchFiles('test', 'environment.yaml');
+  const files = conda.searchFiles('tests/fixtures', 'environment.yaml');
   expect(files.length).toEqual(1);
 });
 
@@ -10,7 +10,7 @@ function roundTripJSON(obj: any): object {
 }
 
 test('Parses manifests', async () => {
-  const files = conda.searchFiles('test', 'environment.yaml');
+  const files = conda.searchFiles('tests/fixtures', 'environment.yaml');
   const manifests = conda.getManifestsFromEnvironmentFiles(files);
   expect(manifests.length).toEqual(1);
   expect(roundTripJSON(manifests[0])).toEqual({
@@ -40,12 +40,12 @@ test('Parses manifests', async () => {
       'pkg:pypi/ninja': { package_url: 'pkg:pypi/ninja', relationship: 'direct', dependencies: [] }
     },
     name: 'test',
-    file: { source_location: 'test/environment.yaml' }
+    file: { source_location: 'tests/fixtures/environment.yaml' }
   });
 });
 
 test('Parses manifests with treatAsPython=true', async () => {
-  const files = conda.searchFiles('test', 'environment.yaml');
+  const files = conda.searchFiles('tests/fixtures', 'environment.yaml');
   const manifests = conda.getManifestsFromEnvironmentFiles(files, { treatAsPython: true });
   expect(manifests.length).toEqual(1);
   const resolved = JSON.parse(JSON.stringify(manifests[0])).resolved as Record<string, any>;

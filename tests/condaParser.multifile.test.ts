@@ -1,25 +1,25 @@
-import conda from './condaParser';
+import conda from '../src/condaParser';
 
 function asJSON(obj: any): any {
   return JSON.parse(JSON.stringify(obj));
 }
 
 test('Globs both environment.yaml and environment.yml by default pattern', async () => {
-  const filesYaml = conda.searchFiles('test', 'environment.yaml');
-  const filesYml = conda.searchFiles('test', 'environment.yml');
+  const filesYaml = conda.searchFiles('tests/fixtures', 'environment.yaml');
+  const filesYml = conda.searchFiles('tests/fixtures', 'environment.yml');
   expect(filesYaml.length).toEqual(1);
   expect(filesYml.length).toEqual(1);
 });
 
 test('Brace pattern finds both manifests', async () => {
-  const files = conda.searchFiles('test', 'environment.{yaml,yml}');
+  const files = conda.searchFiles('tests/fixtures', 'environment.{yaml,yml}');
   expect(files.length).toEqual(2);
 });
 
 test('Parses both manifests in default mode', async () => {
   const files = [
-    ...conda.searchFiles('test', 'environment.yaml'),
-    ...conda.searchFiles('test', 'environment.yml')
+    ...conda.searchFiles('tests/fixtures', 'environment.yaml'),
+    ...conda.searchFiles('tests/fixtures', 'environment.yml')
   ];
   const manifests = conda.getManifestsFromEnvironmentFiles(files);
   expect(manifests.length).toEqual(2);
@@ -32,8 +32,8 @@ test('Parses both manifests in default mode', async () => {
 
 test('Parses both manifests with treatAsPython=true', async () => {
   const files = [
-    ...conda.searchFiles('test', 'environment.yaml'),
-    ...conda.searchFiles('test', 'environment.yml')
+    ...conda.searchFiles('tests/fixtures', 'environment.yaml'),
+    ...conda.searchFiles('tests/fixtures', 'environment.yml')
   ];
   const manifests = conda.getManifestsFromEnvironmentFiles(files, { treatAsPython: true });
   expect(manifests.length).toEqual(2);
